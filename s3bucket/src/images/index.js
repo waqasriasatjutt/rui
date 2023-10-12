@@ -1,0 +1,1 @@
+export { default as login_log } from "./logo2.png";
