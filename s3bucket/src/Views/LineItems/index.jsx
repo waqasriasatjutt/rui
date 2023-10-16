@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "../../components";
 import DotsLoader from "../../components/atoms/DotsLoader";
 import api from "../../services/api";
@@ -8,6 +8,7 @@ import AddItems from "./AddItems";
 function OrderDetail() {
   const params = useParams();
   const { id } = params;
+  const navigate = useNavigate();
   const [isNew, setIsNew] = useState(false);
   const [record, setRecord] = useState([]);
   const [isLoader, setIsLoader]=useState(false)
@@ -21,7 +22,7 @@ function OrderDetail() {
   };
   const Card = ({ item }) => {
     return (
-      <div className="bg-white rounded-lg shadow-lg p-4 flex">
+      <div className="bg-white rounded-lg shadow-lg p-4 flex cursor-pointer" onClick={()=>navigate(`/line_items/line_item_detail/${item.id}`)}>
         {/* Left Section (Image) */}
         <div className="w-full flex flex-row">
           <img src={item.image} alt={item.name} className="w-[100px] h-auto" />
@@ -30,9 +31,9 @@ function OrderDetail() {
             <h2 className="text-xl font-semibold">{item.title}</h2>
             <p className="text-gray-600">Size: {item.size}</p>
             <p className="text-gray-600">Qty: {item.qty}</p>
-            <span className="text-blue-600 cursor-pointer hover:underline">
+            {/* <span className="text-blue-600 cursor-pointer hover:underline">
               View Proof
-            </span>
+            </span> */}
           </div>
         </div>
 
@@ -46,7 +47,7 @@ function OrderDetail() {
   const getData = async () => {
     setIsLoader(true)
     try {
-      const res = await api.get(`/api/add_items/${id}`);
+      const res = await api.get(`/api/line_items/${id}`);
       console.log("🚀 ~ file: index.jsx:49 ~ getData ~ res:", res);
       setIsLoader(false)
       setRecord(res.data);

@@ -12,10 +12,14 @@ const commentsRoutes = require("./routes/comments");
 const orderStatusRoutes = require("./routes/orderStatus");
 const proofStatusRoutes = require("./routes/proofStatus");
 const lineItemsRoutes = require("./routes/lineItems");
-const connection = require("./config/database");
+const uploadTypes = require("./routes/uploadTypes");
 const Order = require("./modals/ordersModal");
-const Comment = require("./modals/commentsModal");
+const Comment = require("./modals/ordersCommentsModal");
 const LineItem = require("./modals/lineItemsModal");
+const Upload = require("./modals/uploads");
+const ProofStatus = require("./modals/proofStatusModal");
+const Proofs = require("./modals/proofsModal");
+const UploadProofs = require("./modals/uploadProofs");
 
 app.use(
   "/api",
@@ -24,7 +28,8 @@ app.use(
   ordersRoutes,
   commentsRoutes,
   lineItemsRoutes,
-  proofStatusRoutes
+  proofStatusRoutes,
+  uploadTypes
 );
 
 aws.config.update({
@@ -46,57 +51,17 @@ const upload = multer({
   }),
 });
 
-// app.post("/api/upload", upload.single("file"), async(req, res) => {
-//   const file = req.file;
-//   const { type, comment, name, order_number, comment_by } = req?.body;
-//   if (!file) {
-//     return res.status(400).json({ message: "No file uploaded" });
-//   }
-//   // Get the public URL of the uploaded image
-//   const imageUrl = file.location;
-//   if (type === "production" || type === "proof") {
-//     const newComment = comment + " " + imageUrl;
-
-//     try {
-//       const commentResult = await Comment.create({
-//         order_number,
-//         comment_by,
-//         comment: newComment,
-//         name,
-//       });
-
-//       // You may want to handle the result here if needed
-//     } catch (err) {
-//       console.error("Error submitting comment:", err);
-//       return res.status(500).json({ error: "Error submitting comment" });
-//     }
-//   }
-//   try {
-//     const order = await Order.findOne({
-//       where: { order_number },
-//     });
-
-//     if (!order) {
-//       return res.status(400).json({ error: "Record not found" });
-//     }
-
-//     const existingImages = JSON.parse(order.images) || [];
-//     const updatedImages = [...existingImages, imageUrl];
-
-//     await order.update({ images: updatedImages });
-//   } catch (err) {
-//     console.error("Database query error:", err);
-//     return res.status(500).json({ error: "Database error" });
-//   }
-//   // Generate the public URL of the uploaded image
-//   res
-//     .status(200)
-//     .json({ message: "Image uploaded successfully", path: file.location });
-// });
-
 app.post("/api/upload", upload.array("files", 10), async (req, res) => {
   const files = req.files; // This will be an array of uploaded files
-  const { type, comment, name, order_number, comment_by } = req.body;
+  const {
+    type,
+    comment,
+    name,
+    order_number,
+    comment_by,
+    type_name,
+    line_item_id,
+  } = req.body;
 
   if (!files || files.length === 0) {
     return res.status(400).json({ message: "No files uploaded" });
@@ -107,7 +72,7 @@ app.post("/api/upload", upload.array("files", 10), async (req, res) => {
       return file.location;
     });
 
-    if (type === "production" || type === "proof") {
+    if (type_name === "Production" || type_name === "Proof") {
       const newComment = comment + " " + uploadResults[0];
 
       try {
@@ -124,6 +89,39 @@ app.post("/api/upload", upload.array("files", 10), async (req, res) => {
         return res.status(500).json({ error: "Error submitting comment" });
       }
     }
+    if (type_name === "Proof") {
+      const status = await ProofStatus.findOne({
+        where: { name: "Active" },
+      });
+      console.log("🚀 ~ file: index.js:96 ~ app.post ~ status:", status)
+      if (!status) {
+        return res.status(500).json({ error: "Proof status not found" });
+      }
+      try {
+        const upload = await Upload.create({
+          url: uploadResults[0],
+          upload_type_id: type,
+          line_item_id: line_item_id,
+        });
+        console.log("Upload Created", upload);
+        const proof = await Proofs.create({
+          proof_number: upload?.id,
+          line_item_id: line_item_id,
+          status_id: status?.id,
+        });
+        console.log("Proofs Created", proof);
+        const uploadProofs = await UploadProofs.create({
+          upload_id: upload?.id,
+          proof_id: proof?.id,
+        });
+        console.log("UploadProofs Created", uploadProofs);
+        // You may want to handle the result here if needed
+      } catch (err) {
+        console.error("Error submitting comment:", err);
+        return res.status(500).json({ error: "Error submitting comment" });
+      }
+    }
+
     try {
       const order = await Order.findOne({
         where: { order_number },
@@ -185,3 +183,4 @@ app.listen(port, () => {
 });
 // php -S localhost:8080
 // nodemon index.js
+// npx sequelize-cli db:migrate

@@ -11,6 +11,8 @@ import OrderStatusList from "./Views/OrderStatus";
 import OrderDetail from "./Views/LineItems";
 import { useSelector } from "react-redux";
 import ProofStatusList from "./Views/ProofStatus";
+import UploadTypesList from "./Views/UploadTypes";
+import ItemDetail from "./Views/LineItems/ItemDetail";
 const App = () => {
   const { user } = useSelector((state) => state.auth);
   console.log("🚀 ~ file: App.js:17 ~ App ~ user:", user)
@@ -29,8 +31,10 @@ const App = () => {
       { path: "/orders", element: <Orders /> },
       { path: "/order_status", element: <OrderStatusList /> },
       { path: "/proof_status", element: <ProofStatusList /> },
+      { path: "/upload_types", element: <UploadTypesList /> },
       { path: "/orders/comments/:id", element: <Comments /> },
       { path: "/orders/order_detail/:id", element: <OrderDetail /> },
+      { path: "/line_items/line_item_detail/:id", element: <ItemDetail /> },
       { path: "*", element: <Navigate to="/orders" replace /> },
     ];
   }

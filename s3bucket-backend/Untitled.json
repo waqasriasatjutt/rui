@@ -1,0 +1,54 @@
+[
+  {
+    "table_name": "SequelizeMeta",
+    "schema_name": "dbo"
+  },
+  {
+    "table_name": "users",
+    "schema_name": "dbo"
+  },
+  {
+    "table_name": "order_status",
+    "schema_name": "dbo"
+  },
+  {
+    "table_name": "order_comments",
+    "schema_name": "dbo"
+  },
+  {
+    "table_name": "line_items",
+    "schema_name": "dbo"
+  },
+  {
+    "table_name": "orders",
+    "schema_name": "dbo"
+  },
+  {
+    "table_name": "proof_statuses",
+    "schema_name": "dbo"
+  },
+  {
+    "table_name": "proofs",
+    "schema_name": "dbo"
+  },
+  {
+    "table_name": "upload_types",
+    "schema_name": "dbo"
+  },
+  {
+    "table_name": "uploads",
+    "schema_name": "dbo"
+  },
+  {
+    "table_name": "upload_proofs",
+    "schema_name": "dbo"
+  },
+  {
+    "table_name": "lineitem_comments",
+    "schema_name": "dbo"
+  },
+  {
+    "table_name": "upload_lineitems",
+    "schema_name": "dbo"
+  }
+]

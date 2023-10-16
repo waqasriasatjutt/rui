@@ -1,0 +1,20 @@
+[
+  {
+    "Table Name": "proofs"
+  },
+  {
+    "Table Name": "upload_proofs"
+  },
+  {
+    "Table Name": "uploads"
+  },
+  {
+    "Table Name": "upload_proofs"
+  },
+  {
+    "Table Name": "upload_lineitems"
+  },
+  {
+    "Table Name": "upload_lineitems"
+  }
+]

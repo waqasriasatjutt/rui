@@ -46,7 +46,7 @@ const Layout = ({ children }) => {
                 show_navlabel={show_navlabel}
               />
             </div>
-            <div className="mx-2 ml-[225px] w-[calc(100vw-220px)] mt-10">{children}</div>
+            <div className="mx-2 ml-[220px] w-[calc(100vw-220px)]">{children}</div>
           </div>
         </>
       ) : (

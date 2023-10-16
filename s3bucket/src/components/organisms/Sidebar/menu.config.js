@@ -32,5 +32,12 @@ export const sideMenu = [
     task: "List Lead",
     permission: ["ALL"],
   },
+  {
+    to: "/upload_types",
+    label: "Upload Types",
+    Icon: FaBusinessTime,
+    task: "List Lead",
+    permission: ["ALL"],
+  },
   
 ];

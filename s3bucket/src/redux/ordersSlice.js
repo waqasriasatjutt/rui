@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-import { createComments, createOrders, createOrderStatus, createProofStatus, getComments, getOrderById, getOrders, getOrderStatus, getProofStatus } from "../services/auth";
+import { createComments, createOrders, createOrderStatus, createProofStatus, createUploadTypes, getComments, getOrderById, getOrders, getOrderStatus, getProofStatus, getUploadTypes } from "../services/auth";
 const initialState = {
   isError: false,
   isSuccess: false,
@@ -11,7 +11,8 @@ const initialState = {
   comments:[],
   ordersDetail:null,
   orderStatus:[],
-  proofStatus:[]
+  proofStatus:[],
+  uploadTypes:[]
 };
 const getErrorMessage = (error) => {
   return (
@@ -84,6 +85,28 @@ export const get_proof_status = createAsyncThunk(
   async (data, thunkAPI) => {
     try {
       return await getProofStatus(data);
+    } catch (error) {
+      const message = getErrorMessage(error);
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const get_upload_types = createAsyncThunk(
+  "get_upload_types",
+  async (data, thunkAPI) => {
+    try {
+      return await getUploadTypes(data);
+    } catch (error) {
+      const message = getErrorMessage(error);
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const create_upload_types = createAsyncThunk(
+  "create_upload_types",
+  async (data, thunkAPI) => {
+    try {
+      return await createUploadTypes(data);
     } catch (error) {
       const message = getErrorMessage(error);
       return thunkAPI.rejectWithValue(message);
@@ -286,6 +309,39 @@ export const orderSlice = createSlice({
         toast.success("Proof Status created successfully")
       })
       .addCase(create_proof_status.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = false;
+        state.isError = true;
+        toast.error(action?.payload?action.payload:"Getting an error")
+      })
+      
+      .addCase(get_upload_types.pending, (state) => {
+        state.isLoading = true;
+        state.message = "";
+      })
+      .addCase(get_upload_types.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.message = "";
+        state.uploadTypes = action.payload.data;
+      })
+      .addCase(get_upload_types.rejected, (state) => {
+        state.isLoading = false;
+        state.isSuccess = false;
+        state.isError = true;
+      })
+      .addCase(create_upload_types.pending, (state) => {
+        state.isLoading = true;
+        state.message = "";
+      })
+      .addCase(create_upload_types.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.message = "";
+        state.uploadTypes.push(action.payload.data);
+        toast.success("Proof Status created successfully")
+      })
+      .addCase(create_upload_types.rejected, (state, action) => {
         state.isLoading = false;
         state.isSuccess = false;
         state.isError = true;

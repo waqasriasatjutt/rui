@@ -1,7 +1,7 @@
 const multer = require("multer");
 const aws = require("aws-sdk");
 const multerS3 = require("multer-s3");
-const Comment = require("../modals/commentsModal");
+const Comment = require("../modals/ordersCommentsModal");
 const Order = require("../modals/ordersModal");
 
 aws.config.update({

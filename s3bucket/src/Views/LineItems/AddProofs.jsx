@@ -10,12 +10,14 @@ import { useDropzone } from "react-dropzone";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { get_upload_types } from "../../redux/ordersSlice";
 const AddProofs = ({ editingRecord, onCancelForm, modalTitle }) => {
+  console.log("🚀 ~ file: AddProofs.jsx:13 ~ AddProofs ~ editingRecord:", editingRecord)
   let user = localStorage.getItem("user");
   user = user ? JSON.parse(user) : null;
   const dispatch = useDispatch();
   const { isLoading, uploadTypes } = useSelector((state) => state.orders);
   const [isLoader, setIsLoader] = useState(false);
   let initialValues = {
+    line_item_id:editingRecord?.id,
     order_number: editingRecord?.order_number,
     name: user?.username,
     comment_by: "Staff",
@@ -70,6 +72,8 @@ const AddProofs = ({ editingRecord, onCancelForm, modalTitle }) => {
     formData.append("name", payload.name);
     formData.append("order_number", payload.order_number);
     formData.append("comment_by", payload.comment_by);
+    formData.append("line_item_id", payload.line_item_id);
+    formData.append("type_name", payload.type_name);
     setIsLoader(true);
     try {
       const res = await api.post("/api/upload", formData, {

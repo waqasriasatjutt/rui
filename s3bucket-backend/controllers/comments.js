@@ -1,4 +1,4 @@
-const Comment= require("../modals/commentsModal");
+const Comment= require("../modals/ordersCommentsModal");
 const Order = require("../modals/ordersModal");
 
 exports.getComments = async (req, res) => {

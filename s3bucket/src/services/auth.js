@@ -34,3 +34,10 @@ export const createProofStatus = async (data) => {
 export const getProofStatus = async () => {
   return await api.get(`/api/proof_status`);
 };
+
+export const getUploadTypes = async () => {
+  return await api.get(`/api/upload_type`);
+};
+export const createUploadTypes = async (data) => {
+  return await api.post(`/api/upload_type`, data);
+};
