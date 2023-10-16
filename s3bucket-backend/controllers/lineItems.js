@@ -6,6 +6,21 @@ const multerS3 = require("multer-s3");
 const Proofs = require("../modals/proofsModal");
 const UploadProofs = require("../modals/uploads");
 const Uploads = require("../modals/uploads");
+const {Sequelize} = require("sequelize");
+const sequelize = new Sequelize({
+  dialect: 'mssql', // Use the SQL Server dialect
+  host: 'sroo.cufw4bzo6bry.ap-southeast-2.rds.amazonaws.com',
+  port: 1433, // SQL Server default port
+  database: 'test_db',
+  username: 'sroo_admin',
+  password: '7hXPPiTl66KzdQjD',
+  dialectOptions: {
+    options: {
+      encrypt: true, // For encrypted connections
+      trustServerCertificate:true
+    },
+  },
+});
 
 aws.config.update({
   accessKeyId: "AKIA42R57AAB7KDYJJIL",
@@ -40,51 +55,82 @@ exports.getLineItems = async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+
+
 exports.getLineItemDetail = async (req, res) => {
   const itemId = req.params.line_item_id;
+
   try {
-    const lineItems = await LineItem.findOne({
-      where: { id: itemId },
+    const sqlQuery = `SELECT li.*, p.*, u.*
+      FROM line_items as li
+      LEFT JOIN Proofs p ON li.id = p.line_item_id
+      LEFT JOIN Upload_Proofs up ON p.id = up.proof_id
+      LEFT JOIN Uploads u ON up.upload_id = u.id
+      WHERE li.id = :itemId    `;
+
+    const [results, metadata] = await sequelize.query(sqlQuery, {
+      replacements: { itemId },
+      type: Sequelize.QueryTypes.SELECT,
     });
-  
-    // const proofs = await Proofs.findAll({
-    //   where: { line_item_id: itemId },
-    //   include: [
-    //     {
-    //       model: Uploads,
-    //       through: {
-    //         model: UploadProofs, // The join table
-    //       },
-    //     },
-    //   ],
-    // });
 
-    // Step 1: Get Proofs by line_item_id
-  const proofs = await Proofs.findOne({
-    where: { line_item_id: itemId,status_id: 1, },
-  });
-  console.log("🚀 ~ file: lineItems.js:54 ~ exports.getLineItemDetail= ~ proofs:", proofs)
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'Line item not found' });
+    }
 
-  // Step 3: Get UploadProofs by proof_id
-  const uploadProofs = await UploadProofs.findOne({
-    where: { proof_id: proofs?.id },
-  });
-  console.log("🚀 ~ file: lineItems.js:63 ~ exports.getLineItemDetail= ~ uploadProofs:", uploadProofs)
+    // Process the results as needed
 
-  // Step 5: Get Uploads by upload_id
-  const uploads = await Uploads.findOne({
-    where: { id: uploadProofs.upload_id },
-  });
-  console.log("🚀 ~ file: lineItems.js:73 ~ exports.getLineItemDetail= ~ uploads:", uploads)
-  
-    console.log(uploads);
-  
-    res.status(200).json({...lineItems?.dataValues,proofs:uploads});
+    res.status(200).json(results);
   } catch (err) {
-    console.error("Database query error: " + err.stack);
-    return res.status(500).json({ message: "Internal server error" });
+    console.error('Database query error: ' + err.stack);
+    return res.status(502).json({ message: 'Internal server error' });
   }
 };
+
+// exports.getLineItemDetail = async (req, res) => {
+//   const itemId = req.params.line_item_id;
+//   try {
+//     const lineItems = await LineItem.findOne({
+//       where: { id: itemId },
+//     });
+//
+//     // const proofs = await Proofs.findAll({
+//     //   where: { line_item_id: itemId },
+//     //   include: [
+//     //     {
+//     //       model: Uploads,
+//     //       through: {
+//     //         model: UploadProofs, // The join table
+//     //       },
+//     //     },
+//     //   ],
+//     // });
+//
+//     // Step 1: Get Proofs by line_item_id
+//   const proofs = await Proofs.findOne({
+//     where: { line_item_id: itemId,status_id: 1, },
+//   });
+//   console.log("🚀 ~ file: lineItems.js:54 ~ exports.getLineItemDetail= ~ proofs:", proofs)
+//
+//   // Step 3: Get UploadProofs by proof_id
+//   const uploadProofs = await UploadProofs.findOne({
+//     where: { proof_id: proofs?.id },
+//   });
+//   console.log("🚀 ~ file: lineItems.js:63 ~ exports.getLineItemDetail= ~ uploadProofs:", uploadProofs)
+//
+//   // Step 5: Get Uploads by upload_id
+//   const uploads = await Uploads.findOne({
+//     where: { id: uploadProofs.upload_id },
+//   });
+//   console.log("🚀 ~ file: lineItems.js:73 ~ exports.getLineItemDetail= ~ uploads:", uploads)
+//
+//     console.log(uploads);
+//
+//     res.status(200).json({...lineItems?.dataValues,proofs:uploads});
+//   } catch (err) {
+//     console.error("Database query error: " + err.stack);
+//     return res.status(500).json({ message: "Internal server error" });
+//   }
+// };
 exports.addLineItem = async (req, res) => {
   try {
     await upload.single("file")(req, res);
