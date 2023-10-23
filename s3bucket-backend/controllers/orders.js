@@ -1,4 +1,4 @@
-const Order = require("../modals/ordersModal");
+const UploadOrder = require("../modals/ordersModal");
 const OrderStatus = require("../modals/orderStatusModal");
 
 exports.getOrders = async (req, res) => {
@@ -28,28 +28,30 @@ exports.getOrdersById = async (req, res) => {
 };
 // Function to generate a unique random order number and insert it into the database
 exports.createOrder = async (req, res) => {
-  const { order_number, created_by, customer_name } = req.body;
+  const { email, name, address1, address2, suburb, postcode, state } = req.body;
   try {
-    const orderNumber = order_number
-      ? order_number
-      : await generateUniqueOrderNumber(order_number);
-
-    // Check if the order number already exists
-    const isOrderNumberExists = await checkOrderNumberExists(orderNumber);
-
-    if (isOrderNumberExists) {
-      res.status(400).json({ error: "Order number already exists" });
-      return;
-    }
-    const status_id = await fetchStatus();
+    // const orderNumber = order_number
+    //   ? order_number
+    //   : await generateUniqueOrderNumber(order_number);
+    //
+    // // Check if the order number already exists
+    // const isOrderNumberExists = await checkOrderNumberExists(orderNumber);
+    //
+    // if (isOrderNumberExists) {
+    //   res.status(400).json({ error: "Order number already exists" });
+    //   return;
+    // }
+    // const status_id = await fetchStatus();
 
     // Insert the order into the database
-    const insertedOrder = await Order.create({
-      order_number: orderNumber,
-      created_by,
-      customer_name,
-      order_status: status_id,
-      payment_status: "not_paid",
+    const insertedOrder = await UploadOrder.create({
+      email,
+      name,
+      address1,
+      address2,
+      suburb,
+      postcode,
+      state,
     });
     res.status(201).json(insertedOrder);
   } catch (err) {
