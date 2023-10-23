@@ -4,7 +4,7 @@ const OrderStatus = require("../modals/orderStatusModal");
 exports.getOrders = async (req, res) => {
   try {
     // Fetch all order statuses from the database
-    const orders = await Order.findAll();
+    const orders = await UploadOrder.findAll();
     res.status(200).json(orders);
   } catch (err) {
     console.error("Error fetching orders:", err);
