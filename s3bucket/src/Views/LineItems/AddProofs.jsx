@@ -9,15 +9,14 @@ import api from "../../services/api";
 import { useDropzone } from "react-dropzone";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { get_upload_types } from "../../redux/ordersSlice";
-const AddProofs = ({ editingRecord, onCancelForm, modalTitle }) => {
-  console.log("🚀 ~ file: AddProofs.jsx:13 ~ AddProofs ~ editingRecord:", editingRecord)
+const AddProofs = ({ editingRecord, onCancelForm, modalTitle, getData }) => {
   let user = localStorage.getItem("user");
   user = user ? JSON.parse(user) : null;
   const dispatch = useDispatch();
   const { isLoading, uploadTypes } = useSelector((state) => state.orders);
   const [isLoader, setIsLoader] = useState(false);
   let initialValues = {
-    line_item_id:editingRecord?.id,
+    line_item_id:editingRecord?.line_item_id,
     order_number: editingRecord?.order_number,
     name: user?.username,
     comment_by: "Staff",
@@ -83,6 +82,7 @@ const AddProofs = ({ editingRecord, onCancelForm, modalTitle }) => {
       });
       if (res.status === 200) {
         toast.success("File uploaded successfully");
+        getData()
         onCancelForm();
       } else {
         toast.error(`File couldn't be uploaded`);

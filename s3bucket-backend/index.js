@@ -20,6 +20,7 @@ const Upload = require("./modals/uploads");
 const ProofStatus = require("./modals/proofStatusModal");
 const Proofs = require("./modals/proofsModal");
 const UploadProofs = require("./modals/uploadProofs");
+const LineItemsComments = require("./modals/lineItemsComments");
 
 app.use(
   "/api",
@@ -72,28 +73,27 @@ app.post("/api/upload", upload.array("files", 10), async (req, res) => {
       return file.location;
     });
 
-    if (type_name === "Production" || type_name === "Proof") {
-      const newComment = comment + " " + uploadResults[0];
+    // if (type_name === "Production" || type_name === "Proof") {
+    //   const newComment = comment + " " + uploadResults[0];
 
-      try {
-        const commentResult = await Comment.create({
-          order_number,
-          comment_by,
-          comment: newComment,
-          name,
-        });
+    //   try {
+    //     const commentResult = await Comment.create({
+    //       order_number,
+    //       comment_by,
+    //       comment: newComment,
+    //       name,
+    //     });
 
-        // You may want to handle the result here if needed
-      } catch (err) {
-        console.error("Error submitting comment:", err);
-        return res.status(500).json({ error: "Error submitting comment" });
-      }
-    }
+    //     // You may want to handle the result here if needed
+    //   } catch (err) {
+    //     console.error("Error submitting comment:", err);
+    //     return res.status(500).json({ error: "Error submitting comment" });
+    //   }
+    // }
     if (type_name === "Proof") {
       const status = await ProofStatus.findOne({
         where: { name: "Active" },
       });
-      console.log("🚀 ~ file: index.js:96 ~ app.post ~ status:", status)
       if (!status) {
         return res.status(500).json({ error: "Proof status not found" });
       }
@@ -114,7 +114,12 @@ app.post("/api/upload", upload.array("files", 10), async (req, res) => {
           upload_id: upload?.id,
           proof_id: proof?.id,
         });
-        console.log("UploadProofs Created", uploadProofs);
+          const commentResult = await LineItemsComments.create({
+            line_item_id,
+            comment_by,
+            comment:comment,
+            name,
+          });
         // You may want to handle the result here if needed
       } catch (err) {
         console.error("Error submitting comment:", err);

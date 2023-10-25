@@ -6,7 +6,9 @@ const multerS3 = require("multer-s3");
 const Proofs = require("../modals/proofsModal");
 const UploadProofs = require("../modals/uploads");
 const Uploads = require("../modals/uploads");
+const ProofStatus=require('../modals/proofStatusModal')
 const {Sequelize} = require("sequelize");
+const LineItemsComments = require("../modals/lineItemsComments");
 const sequelize = new Sequelize({
   dialect: 'mssql', // Use the SQL Server dialect
   host: 'sroo.cufw4bzo6bry.ap-southeast-2.rds.amazonaws.com',
@@ -63,23 +65,25 @@ exports.getLineItemDetail = async (req, res) => {
   try {
     const sqlQuery = `SELECT li.*, p.*, u.*
       FROM line_items as li
-      LEFT JOIN Proofs p ON li.id = p.line_item_id
+      LEFT JOIN Proofs p ON li.id = p.line_item_id AND p.status_id=1 OR li.id = p.line_item_id AND p.status_id>1
       LEFT JOIN Upload_Proofs up ON p.id = up.proof_id
       LEFT JOIN Uploads u ON up.upload_id = u.id
-      WHERE li.id = :itemId    `;
-
+      WHERE li.id = :itemId`;
+      const comments = await LineItemsComments.findAll({
+        where: { line_item_id: itemId },
+        order: [['id', 'DESC']],
+      });
     const [results, metadata] = await sequelize.query(sqlQuery, {
       replacements: { itemId },
       type: Sequelize.QueryTypes.SELECT,
     });
-
-    if (results.length === 0) {
+    if (!results || results.length === 0) {
       return res.status(404).json({ message: 'Line item not found' });
     }
 
     // Process the results as needed
 
-    res.status(200).json(results);
+    res.status(200).json({...results,comments});
   } catch (err) {
     console.error('Database query error: ' + err.stack);
     return res.status(502).json({ message: 'Internal server error' });

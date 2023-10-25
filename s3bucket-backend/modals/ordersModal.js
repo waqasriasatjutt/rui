@@ -1,35 +1,38 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-
-const UploadOrder = sequelize.define('UploadOrder', {
-  id: {
+const Order = sequelize.define('Order', {
+  order_number: {
+    type: DataTypes.STRING(6),
+    allowNull: false,
+  },
+  created_by: {
+    type: DataTypes.STRING(255),
+    allowNull: false,
+  },
+  customer_name: {
+    type: DataTypes.STRING(255),
+    allowNull: false,
+  },
+  order_status: {
     type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
+    allowNull: true,
   },
-  email: {
+  payment_status: {
     type: DataTypes.STRING(255),
+    allowNull: true,
   },
-  name: {
+  images: {
+    type: DataTypes.JSON,
+    defaultValue: [], // Set an empty array as default value
+    allowNull: false,
+  },
+  active_image: {
     type: DataTypes.STRING(255),
+    allowNull: true,
   },
-  address1: {
-    type: DataTypes.STRING(255),
-  },
-  address2: {
-    type: DataTypes.STRING(255),
-  },
-  suburb: {
-    type: DataTypes.STRING(255),
-  },
-  postcode: {
-    type: DataTypes.STRING(255),
-  },
-  state: {
-    type: DataTypes.STRING(255),
-  },
-  // Add more fields as needed
+},{
+  tableName: 'orders',
 });
 
-module.exports = UploadOrder;
+module.exports = Order;

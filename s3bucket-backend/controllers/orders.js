@@ -1,10 +1,10 @@
-const UploadOrder = require("../modals/ordersModal");
+const Order = require("../modals/ordersModal");
 const OrderStatus = require("../modals/orderStatusModal");
 
 exports.getOrders = async (req, res) => {
   try {
     // Fetch all order statuses from the database
-    const orders = await UploadOrder.findAll();
+    const orders = await Order.findAll();
     res.status(200).json(orders);
   } catch (err) {
     console.error("Error fetching orders:", err);
@@ -28,30 +28,28 @@ exports.getOrdersById = async (req, res) => {
 };
 // Function to generate a unique random order number and insert it into the database
 exports.createOrder = async (req, res) => {
-  const { email, name, address1, address2, suburb, postcode, state } = req.body;
+  const { order_number, created_by, customer_name } = req.body;
   try {
-    // const orderNumber = order_number
-    //   ? order_number
-    //   : await generateUniqueOrderNumber(order_number);
-    //
-    // // Check if the order number already exists
-    // const isOrderNumberExists = await checkOrderNumberExists(orderNumber);
-    //
-    // if (isOrderNumberExists) {
-    //   res.status(400).json({ error: "Order number already exists" });
-    //   return;
-    // }
-    // const status_id = await fetchStatus();
+    const orderNumber = order_number
+      ? order_number
+      : await generateUniqueOrderNumber(order_number);
+
+    // Check if the order number already exists
+    const isOrderNumberExists = await checkOrderNumberExists(orderNumber);
+
+    if (isOrderNumberExists) {
+      res.status(400).json({ error: "Order number already exists" });
+      return;
+    }
+    const status_id = await fetchStatus();
 
     // Insert the order into the database
-    const insertedOrder = await UploadOrder.create({
-      email,
-      name,
-      address1,
-      address2,
-      suburb,
-      postcode,
-      state,
+    const insertedOrder = await Order.create({
+      order_number: orderNumber,
+      created_by,
+      customer_name,
+      order_status: status_id,
+      payment_status: "not_paid",
     });
     res.status(201).json(insertedOrder);
   } catch (err) {

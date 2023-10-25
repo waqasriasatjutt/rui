@@ -75,3 +75,6 @@
   /* color: #fff; */
   text-align: center;
 }
+.clip_path{
+  clip-path: polygon(0 0, 0% 100%, 100% 0);
+}
