@@ -1,0 +1,17 @@
+{
+    "development": {
+      "username": "sroo_admin",
+      "password": "7hXPPiTl66KzdQjD",
+      "database": "sroo_client",
+      "host": "sroo.cufw4bzo6bry.ap-southeast-2.rds.amazonaws.com",
+      "dialect": "mssql",
+    "logging": "console.log"
+    },
+    "production": {
+      "username": "sroo_admin",
+      "password": "7hXPPiTl66KzdQjD",
+      "database": "sroo_client",
+      "host": "sroo.cufw4bzo6bry.ap-southeast-2.rds.amazonaws.com",
+      "dialect": "mssql"
+    }
+  }
