@@ -59,13 +59,17 @@ const Modal = (props) => {
                 onClick={props.onCancelModal}
                 variant="btn_cancel"
               />
-              <Button
+              {
+                props.hideSubmit?null:
+                <Button
                 text={"Submit"}
                 className="text-white bg-blue-700 hover:bg-blue-800"
                 onClick={props.onSubmit}
                 isLoading={props?.isLoading}
                 variant="btn_submit"
               />
+              }
+              
             </div>
             
           )}

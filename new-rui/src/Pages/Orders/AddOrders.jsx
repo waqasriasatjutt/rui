@@ -137,6 +137,7 @@ const AddOrders = ({ editingRecord, onCancelForm, modalTitle }) => {
         onSubmit={handleUpload}
         isLoading={isLoading}
         onClick={onCancelForm}
+        hideSubmit={!!editingRecord?.id}
       >
         {isLoader ? <DotsLoader /> : null}
         <form>
