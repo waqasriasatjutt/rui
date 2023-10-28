@@ -6,16 +6,21 @@ const SelectInput = ({
   value,
   valueProp,
   labelProp,
-  placeholder
+  placeholder,
 }) => {
   return (
-    <select name={name} className={className} onChange={onChange} value={value} placeholder={placeholder}>
-      <option value={""} className="text-blue-100">{placeholder}</option>
+    <select
+      name={name}
+      className={className}
+      onChange={onChange}
+      value={value}
+      placeholder={placeholder}>
+      <option value={''} className='text-blue-100'>
+        {placeholder}
+      </option>
       {options.map((option, index) => (
-        <option key={index} value={option[valueProp]}
-        
-        >
-           {option[labelProp]}
+        <option key={index} value={option[valueProp]}>
+          {option[labelProp]}
         </option>
       ))}
     </select>
