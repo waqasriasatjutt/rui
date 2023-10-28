@@ -13,6 +13,7 @@ const UploadFile = () => {
     name: "",
   };
   const [payload, setPayload] = useState(initialValues);
+  const [successMessage, setSuccessMessage] = useState(""); // Step 1: State for success message
 
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [userDetails, setUserDetails] = useState({
@@ -78,6 +79,10 @@ const UploadFile = () => {
       if (res.payload.status === 201) {
         // setPayload(initialValues)
         // toast.success("Order created");
+        setSuccessMessage("Order created successfully");
+        // Step 3: Refresh the page
+        window.location.reload();
+
       }
     } catch (error) {
       toast.error("Order couldn't be created");
