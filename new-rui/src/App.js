@@ -1,14 +1,14 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css';
-import OrderList from './Pages/Orders/index.jsx';
-import AddOrder from './AddOrder';
+import OrderList from "./Pages/Orders/index.jsx";
+import Home from "./Pages/Home";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<OrderList />} />
-        <Route path='/add-order' element={<AddOrder />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/orderlist" element={<OrderList />} />
       </Routes>
     </BrowserRouter>
   );
