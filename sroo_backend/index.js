@@ -1,5 +1,5 @@
 const app = require("./app");
-const port = process.env.PORT || 3002;
+const port = process.env.PORT || 3005;
 
 const multer = require("multer");
 const aws = require("aws-sdk");
