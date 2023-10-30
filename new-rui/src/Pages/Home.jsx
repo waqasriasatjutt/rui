@@ -1,19 +1,17 @@
 import React from 'react';
-import Sidebar from '../components/Sidebar';
-import Form from '../components/molecules/Form';
-import AddOrders from './Orders/AddOrders';
+
+import { toast } from 'react-toastify';
+import Form from "../components/molecules/Form"
+import AddOrders from '../components/organisms/AddOrdersForm/AddOrders';
 
 const Home = () => {
   return (
     <>
-    <div className='flex flex-nowrap overflow-hidden max-w-[100vw] h-[100vh]'>
-        {/* <Sidebar /> */}
-        <div className='w-full'>
-            <div className='p-[21.5px] border-[#d5d5d5] !overflow-y-hidden'>
+              <div className=' border-2 border-slate-300 rounded-xl m-5 ' >
                 <AddOrders/>
-            </div>
-        </div>
-    </div>
+              </div>
+          
+       
     </>
   )
 }

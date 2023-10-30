@@ -3,13 +3,11 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { Button, Input } from "../../components";
 import { get_orders } from "../../redux/ordersSlice";
 import DotsLoader from "../../components/atoms/DotsLoader";
-import AddOrders from "./AddOrders";
-
-
-
-
+import AddOrders from "./EditOrders";
+import EditOrders from "./EditOrders";
 const OrderList = () => {
   const { orders, isLoading } = useSelector((state) => state.orders);
   const dispatch = useDispatch();
@@ -20,6 +18,7 @@ const OrderList = () => {
   // Sample order data
   useEffect(() => {
     dispatch(get_orders());
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -37,7 +36,7 @@ const OrderList = () => {
     <div className="p-4">
       {isLoading || isLoader?<DotsLoader/>:null}
       {isOrders && (
-        <AddOrders
+        <EditOrders
           editingRecord={editingRecord}
           modalTitle="Create Orders"
           onCancelForm={cancelFormHandler}
