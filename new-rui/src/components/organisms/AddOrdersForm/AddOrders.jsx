@@ -2,12 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { Input } from "../..";
+import TextField from '@mui/material/TextField';
 import DotsLoader from "../../atoms/DotsLoader";
-import SelectInput from "../../atoms/SelectInput";
-import Modal from "../../molecules/Modal";
 import api from "../../../services/api";
-
 import Form from "../../molecules/Form";
+import { Link } from "react-router-dom";
 const AddOrders = ({ editingRecord, onCancelForm, modalTitle }) => {
   const dispatch = useDispatch();
   const { isLoading, uploadTypes } = useSelector((state) => state.orders);
@@ -52,6 +51,11 @@ const AddOrders = ({ editingRecord, onCancelForm, modalTitle }) => {
     });
   };
 
+  const pixelsToCm = (pixels, dpi) => {
+    const inches = pixels / dpi;
+    const centimeters = inches * 2.54;
+    return centimeters;
+  };
 
   const handleUpload = async () => {
     if (payload?.type_name === "Proof" && uploadedFiles.length > 1) {
@@ -150,124 +154,91 @@ const AddOrders = ({ editingRecord, onCancelForm, modalTitle }) => {
       >
         {isLoader ? <DotsLoader /> : null}
         <form>
-          <h2 className="text-3xl font-bold underline mb-4">
+          <div className="flex items-center justify-between flex-col-reverse md:flex-row my-3 space-y-2 " >
+
+          <h2 className="text-3xl font-bold underline mb-4  text-center md:text-start ">
             User Information
           </h2>
-          <div className="grid grid-cols-3 gap-x-2">
-            <div className="w-full mb-4">
-              <label
-                for="email"
-                class="block mb-2 text-left text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Email
-              </label>
-              <input
+          <div>
+            <p className=" font-semibold " >Have an account? <Link to="/"><span className="text-blue-600" >Login</span></Link>  </p>
+          </div>
+          </div>
+          <div className="md:flex md:justify-between md:space-x-10 px-4 ">
+          <div className="md:w-full md:grid md:col-auto h-max md:sticky md:top-5 ">
+            <div className="w-full mb-4 col-span-4 ">
+            
+              <TextField label="Email"
                 disabled={!!editingRecord?.id}
                 type="email"
                 name="email"
                 value={payload.email}
                 onChange={(e) => handleInputChange(e)}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              />
+                className="bg-white w-full "              />
             </div>
-            <div className="w-full mb-4">
-              <label
-                for="name"
-                class="block mb-2 text-left text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Name
-              </label>
-              <input
+            <div className="w-full mb-4 col-span-4   ">
+              
+              <TextField
+              label="Name"
                 disabled={!!editingRecord?.id}
                 type="text"
                 name="name"
                 value={payload.name}
                 onChange={(e) => handleInputChange(e)}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              />
+                className="bg-white w-full"              />
             </div>
-            <div className="w-full mb-4">
-              <label
-                for="address1"
-                class="block mb-2 text-left text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Address 1
-              </label>
-              <input
+            <div className="w-full mb-4 col-span-4">
+             
+              <TextField label=" Address 1"
                 disabled={!!editingRecord?.id}
                 type="text"
                 name="address1"
                 value={payload.address1}
                 onChange={(e) => handleInputChange(e)}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              />
+                className="bg-white w-full"              />
             </div>
-            <div className="w-full mb-4">
-              <label
-                for="address2"
-                class="block mb-2 text-left text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Address 2
-              </label>
-              <input
+            <div className="w-full mb-4 col-span-4">
+             
+              <TextField label="Address 2 "
                 disabled={!!editingRecord?.id}
                 type="text"
                 name="address2"
                 value={payload.address2}
                 onChange={(e) => handleInputChange(e)}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              />
+                className="bg-white w-full"              />
             </div>
-            <div className="w-full mb-4">
-              <label
-                for="suburb"
-                class="block mb-2 text-left text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Suburb
-              </label>
-              <input
+            <div className="w-full mb-4 col-span-1 flex md:justify-start items-center ">
+             
+              <TextField label="suburb"
                 disabled={!!editingRecord?.id}
                 type="text"
                 name="suburb"
                 value={payload.suburb}
                 onChange={(e) => handleInputChange(e)}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-white md:w-[95%] w-full" 
               />
             </div>
-            <div className="w-full mb-4">
-              <label
-                for="postCode"
-                class="block mb-2 text-left text-sm font-medium text-gray-900 dark:text-white"
-              >
-                PostCode
-              </label>
-              <input
+            <div className="w-full mb-4 col-span-1 flex md:justify-center items-center ">
+             
+              <TextField label="PostCode"
                 disabled={!!editingRecord?.id}
                 type="number"
                 name="postCode"
                 value={payload.postCode}
                 onChange={(e) => handleInputChange(e)}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              />
+                className="bg-white md:w-[95%] w-full"             />
             </div>
-            <div className="w-full mb-4">
-              <label
-                for="state"
-                class="block mb-2 text-left text-sm font-medium text-gray-900 dark:text-white"
-              >
-                State
-              </label>
-              <input
+            <div className="w-full mb-4 col-span-2 flex md:justify-end items-center  ">
+              
+              <TextField label="State"
                 disabled={!!editingRecord?.id}
                 type="text"
                 name="state"
                 value={payload.state}
                 onChange={(e) => handleInputChange(e)}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              />
+                className="bg-white md:w-[95%] w-full"              />
             </div>
           </div>
-          <div className="w-full m-auto text-center my-5">
+          <div className="w-full m-auto  text-center my-5">
             <div
               onDragOver={handleDragOver}
               onDrop={handleDrop}
@@ -304,36 +275,56 @@ const AddOrders = ({ editingRecord, onCancelForm, modalTitle }) => {
               </label>
             </div>
             <div>
-              <ul className="list-disc">
+              <ul className="list-disc   ">
                 {uploadedFiles?.map((file, index) => (
-                  <li
+                  <li  
                     key={index}
-                    className="flex w-full my-5 justify-around pb-4 border-solid border-b-2 border-teal-600"
+                    className="flex w-full items-center my-5 justify-around pb-4 border-solid border-b-2 border-teal-600"
                   >
+                    
+
+                    
                     <img
                       src={
                         payload?.id ? file?.url : URL.createObjectURL(file.file)
                       }
                       alt="Uploaded"
                       className="h-[150px] w-[150px]"
-                    />
-                    {file.name} | Dimensions: {file.dimensions} | Size:{" "}
-                    {file.size ? file.size : file?.filesize} bytes
-                    <input
+                      />
+                    
+
+                    {file.name} | Size:{" "}
+    {file.size
+      ? `${(file.size / (1024 * 1024)).toFixed(2)} MB`
+      : 'N/A'}
+    | Dimensions: {file.dimensions ? (
+      `${pixelsToCm(file.dimensions.split('x')[0], 96).toFixed(2)} cm x ${pixelsToCm(file.dimensions.split('x')[1], 96).toFixed(2)} cm`
+    ) : 'N/A'}
+                    
+                     
+                    <div className=" mb-4">
+                 
+                    <TextField
+                    label="QTY"
                       type="number"
                       value={file.qty}
                       onChange={(e) =>
                         handleQuantityChange(index, e.target.value)
                       }
-                      className="bg-gray-50 h-max w-max mx-5 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      className=""
                     />
+                    </div>
                   </li>
                 ))}
               </ul>
             </div>
           </div>
+          </div>
         </form>
       </Form>
+      
+
+     
     </>
   );
 };

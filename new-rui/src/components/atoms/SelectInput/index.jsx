@@ -9,7 +9,9 @@ const SelectInput = ({
   placeholder
 }) => {
   return (
-    <select name={name} className={className} onChange={onChange} value={value} placeholder={placeholder}>
+    <>
+    <p>Qty</p>
+    <select  name={name} className={className} onChange={onChange} value={value} placeholder={placeholder}>
       <option value={""} className="text-blue-100">{placeholder}</option>
       {options.map((option, index) => (
         <option key={index} value={option[valueProp]}
@@ -19,6 +21,7 @@ const SelectInput = ({
         </option>
       ))}
     </select>
+      </>
   );
 };
 
